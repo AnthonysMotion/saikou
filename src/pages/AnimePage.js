@@ -4,33 +4,52 @@ import { useParams } from "react-router-dom"; // Use the useParams hook to get r
 
 const AnimePage = () => {
   const [animeDetails, setAnimeDetails] = useState(null);
-  const { animeName } = useParams(); // Access animeName from the URL params
+  const [error, setError] = useState(null);
+  const { animeName } = useParams();
 
   useEffect(() => {
-    // Fetch anime details from the server
     const fetchAnimeDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/anime/${animeName}`);
-        setAnimeDetails(response.data);
+        
+        if (response.data) {
+          setAnimeDetails(response.data);
+          setError(null);  // Clear error if data is found
+        } else {
+          setError('No data found for this anime.');
+        }
       } catch (error) {
+        setError('Error fetching anime details.');
         console.error('Error fetching anime details:', error);
       }
     };
-    fetchAnimeDetails();
+
+    if (animeName) {
+      fetchAnimeDetails();
+    }
   }, [animeName]);
 
-  if (!animeDetails) return <div>Loading...</div>;
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!animeDetails) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <h1>{animeDetails.name}</h1>
       <img src={animeDetails.image} alt={animeDetails.name} />
-      <p>{animeDetails.description}</p> {/* Render description directly as a string */}
-
-      {/* Render episodes if they exist */}
-      <p>Total Episodes: {animeDetails.episodes}</p>
+      <p><strong>Type:</strong> {animeDetails.type}</p>
+      <p><strong>Plot Summary:</strong> {animeDetails.plotSummary}</p>
+      <p><strong>Genre:</strong> {animeDetails.genres}</p>
+      <p><strong>Released:</strong> {animeDetails.released}</p>
+      <p><strong>Status:</strong> {animeDetails.status}</p>
+      <p><strong>Total Episodes:</strong> {animeDetails.episodes}</p>
     </div>
   );
 };
+
 
 export default AnimePage;
