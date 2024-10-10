@@ -1,42 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+// src/pages/AnimePage.js
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom"; // For accessing URL parameters
+import Pagination from "../components/Pagination"; // Import the Pagination component
 
 const AnimePage = () => {
-  const { animeName } = useParams();  // Get the anime name from the URL
-  const [animeDetails, setAnimeDetails] = useState(null);
+  const { page } = useParams();  // Grab the page number from the URL
+  const [animeList, setAnimeList] = useState([]);
 
+  // Fetch anime data for the current page when the page number changes
   useEffect(() => {
-    const fetchAnimeDetails = async () => {
-      try {
-        // Call the API endpoint that scrapes the anime details from the individual anime page
-        const response = await axios.get(`http://localhost:5000/api/anime/${animeName}`);
-        setAnimeDetails(response.data);  // Set the scraped anime details
-      } catch (error) {
-        console.error("Error fetching anime details:", error);
-      }
-    };
-
-    fetchAnimeDetails();
-  }, [animeName]);
+    fetch(`http://localhost:5000/api/anime/${page}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAnimeList(data);  // Set the anime data for the current page
+      })
+      .catch((err) => console.log("Error fetching anime:", err));
+  }, [page]);  // This will re-fetch the data when the page changes
 
   return (
     <div>
-      {animeDetails ? (
-        <>
-          <h1>{animeDetails.title}</h1>
-          <img src={animeDetails.img} alt={animeDetails.title} />
-          <div>
-            {animeDetails.paragraphs.map((p, index) => (
-              <p key={index}>{p}</p>
-            ))}
+      <h1>Anime List - Page {page}</h1>
+      <div className="anime-list">
+        {animeList.map((anime) => (
+          <div key={anime.url}>
+            <h2>{anime.name}</h2>
+            <a href={`/anime/${anime.url}`}>Watch {anime.name}</a>
           </div>
-        </>
-      ) : (
-        <p>Loading anime details...</p>
-      )}
+        ))}
+      </div>
+      {/* Pagination */}
+      <Pagination currentPage={Number(page)} totalItems={animeList.length} itemsPerPage={40} />
     </div>
   );
-}
+};
 
 export default AnimePage;

@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-function AllAnimePage() {
+const AllAnimePage = () => {
+  const { page } = useParams(); // Use useParams to get the page from the URL
   const [animeList, setAnimeList] = useState([]);
 
   useEffect(() => {
-    // Fetch the anime list from your backend
-    axios.get('http://localhost:5000/api/anime')
-      .then(response => setAnimeList(response.data))
-      .catch(err => console.error(err));
-  }, []);
+    fetch(`http://localhost:5000/api/anime-list?page=${page}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAnimeList(data); // Set the anime list from the API
+      })
+      .catch((err) => console.log('Error fetching anime:', err));
+  }, [page]);
 
   return (
     <div>
-      <h1>All Anime</h1>
-      <ul>
-        {animeList.map((anime, index) => (
-          <li key={index}>
-            <Link to={`/anime/${anime.url}`}>{anime.name}</Link>
-          </li>
+      <h1>Anime List - Page {page}</h1>
+      <div>
+        {animeList.map((anime) => (
+          <div key={anime.url}>
+            <p>{anime.name}</p>
+            <a href={`/anime/${anime.url}`}>Watch {anime.name}</a>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
-}
+};
 
 export default AllAnimePage;
