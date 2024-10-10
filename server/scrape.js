@@ -25,13 +25,13 @@ const scrapeAnimeList = async (pageNumber) => {
         animeList.push({ name, url: href });
       }
     });
-    console.log(`Scraped page ${pageNumber}`);
+    //console.log(`Scraped page ${pageNumber}`);
   } catch (error) {
     console.error('Error scraping anime list:', error);
   }
 };
 
-// Function to scrape additional details of a specific anime
+// Function to scrape anime details of a specific anime
 const scrapeAnimeDetails = async (animeUrl) => {
     // Construct the correct URL with '/category/' path
     const animeDetailsUrl = `https://ww8.gogoanimes.org/category/${animeUrl}`;
@@ -61,7 +61,7 @@ const scrapeAnimeDetails = async (animeUrl) => {
       const status = $('p.type span:contains("Status:")').next().text().trim();
   
       // Scrape the total number of episodes (assuming episodes are in <a> tags with href starting with "/episode")
-      const episodes = $('div.anime_info_episodes_next').find('input#movie_id').attr('value') === '0' ? 0 : 1;
+      const episodes = $('div.anime_info_episodes_next').find('a[href^="/episode"]').length;
   
       // Return the scraped anime details
       return {
