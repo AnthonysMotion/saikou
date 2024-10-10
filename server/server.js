@@ -1,55 +1,52 @@
 const express = require('express');
-const axios = require('axios');
-const cheerio = require('cheerio');
-const cors = require('cors');  // Import the CORS middleware
+const cors = require('cors');
+const { scrapeAllPages, scrapeAnimeDetails, animeList } = require('./scrape');  // Import scrape functions
 const app = express();
 const PORT = 5000;
 
-// Enable CORS for all origins (or specify the exact origin)
-app.use(cors()); // This allows all origins, for more strict control use: `app.use(cors({ origin: 'http://localhost:3000' }))`
-
-// An array to store scraped anime list
-let animeList = [];
-
-// Function to scrape anime list from a given page
-const scrapeAnimeList = async (pageNumber) => {
-  const url = `https://ww8.gogoanimes.org/anime-list?page=${pageNumber}`;
-  try {
-    const { data } = await axios.get(url);
-    const $ = cheerio.load(data);
-
-    $('.anime_list_body ul.listing li').each((index, element) => {
-      const animeElement = $(element).find('a');
-      const name = animeElement.text().trim();
-      const href = animeElement.attr('href').replace('/category/', ''); // Remove "/category/"
-      animeList.push({ name, url: href });
-    });
-    console.log(`Scraped page ${pageNumber}`);
-  } catch (error) {
-    console.error('Error scraping anime list:', error);
-  }
-};
-
-// Scrape anime list from multiple pages (up to 10 pages)
-const scrapeAllPages = async () => {
-  const totalPages = 10; // Assume 10 pages max, update as needed
-  for (let page = 1; page <= totalPages; page++) {
-    await scrapeAnimeList(page);
-  }
-};
-
-// Scrape all pages on startup
-scrapeAllPages();
+// Enable CORS for all origins
+app.use(cors());
 
 // API to get paginated anime list
 app.get('/api/anime-list', (req, res) => {
-  const { page = 1 } = req.query; // Page number from query string
-  const itemsPerPage = 40;
-  const startIndex = (page - 1) * itemsPerPage;
+  const { page = 1 } = req.query;  // Default to page 1 if not provided
+  const itemsPerPage = 100;  // Number of items per page
+  const startIndex = (page - 1) * itemsPerPage;  // Calculate start index
   const paginatedAnimeList = animeList.slice(startIndex, startIndex + itemsPerPage);
-  res.json(paginatedAnimeList);
+
+  // Return paginated list along with the total number of items
+  res.json({
+    totalItems: animeList.length,
+    paginatedAnimeList,
+  });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// API to get specific anime details by URL
+app.get('/api/anime/:animeName', async (req, res) => {
+  const { animeName } = req.params;
+  const anime = animeList.find((item) => item.url === animeName);  // Find the anime by URL
+
+  if (anime) {
+    console.log("Anime found:", anime);
+
+    // Scrape detailed info for the anime
+    const details = await scrapeAnimeDetails(anime.url);
+    if (details) {
+      // Merge the scraped details with the basic anime info
+      const animeDetails = { ...anime, ...details };
+      res.json(animeDetails);  // Send back the full anime details as JSON
+    } else {
+      res.status(404).json({ message: 'Anime details not found' });
+    }
+  } else {
+    console.log("Anime not found:", animeName);
+    res.status(404).json({ message: 'Anime not found' });  // Return 404 if not found
+  }
+});
+
+// Start the server and scrape all anime list pages
+scrapeAllPages().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
 });

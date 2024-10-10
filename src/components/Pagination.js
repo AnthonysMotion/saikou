@@ -1,22 +1,36 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Pagination = ({ currentPage, totalItems, itemsPerPage }) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);  // Calculate total pages
 
   return (
-    <div className="pagination">
-      {currentPage > 1 && (
-        <Link to={`/anime-list?page=${currentPage - 1}`} className="prev-page">
-          Previous
-        </Link>
-      )}
-      <span>Page {currentPage} of {totalPages}</span>
-      {currentPage < totalPages && (
-        <Link to={`/anime-list?page=${currentPage + 1}`} className="next-page">
-          Next
-        </Link>
-      )}
+    <div>
+      {/* Previous Page Button */}
+      <button
+        disabled={currentPage === 1}
+        onClick={() => window.location.href = `/anime/list/${currentPage - 1}`}
+      >
+        Previous
+      </button>
+
+      {/* Page Number Buttons */}
+      {Array.from({ length: totalPages }, (_, index) => (
+        <button
+          key={index + 1}
+          onClick={() => window.location.href = `/anime/list/${index + 1}`}
+          style={{ fontWeight: currentPage === index + 1 ? 'bold' : 'normal' }}
+        >
+          {index + 1}
+        </button>
+      ))}
+
+      {/* Next Page Button */}
+      <button
+        disabled={currentPage === totalPages}
+        onClick={() => window.location.href = `/anime/list/${currentPage + 1}`}
+      >
+        Next
+      </button>
     </div>
   );
 };
