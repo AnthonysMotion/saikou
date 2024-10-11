@@ -7,20 +7,29 @@ import AnimePage from './pages/AnimePage';
 function App() {
   return (
     <Router>
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/anime/list/1">Anime List</Link></li>
-          {/* Add more links if needed */}
-        </ul>
+      <nav className="navbar">
+        <div className="navbar-left">
+          <div className="logo">
+            <Link to="/">SAIKOU</Link>
+          </div>
+          <ul className="nav-links">
+            <li><Link to="/">HOME</Link></li>
+            <li><Link to="/anime/list/1">ANIME LIST</Link></li>
+            <li><Link to="/popular">POPULAR</Link></li>
+          </ul>
+        </div>
+        <div className="navbar-right">
+          <ul className="nav-links">
+            <li><Link to="/login">LOG IN</Link></li>
+            <li><Link to="/signup">REGISTER</Link></li>
+          </ul>
+        </div>
       </nav>
 
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/all-anime" element={<AllAnimePage />} />
-        {/* Add pagination route for anime list */}
         <Route path="/anime/list/:page" element={<AllAnimePage />} />
-        {/* Dynamic route for individual anime page */}
         <Route path="/anime/:animeName" element={<AnimePage />} />
       </Routes>
     </Router>

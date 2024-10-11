@@ -22,7 +22,7 @@ const AllAnimePage = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   return (
-    <div>
+    <div class="container">
       <h1>Anime List - Page {page}</h1>
       <div>
         {animeList.map((anime) => (

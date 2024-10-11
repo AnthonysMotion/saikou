@@ -2,9 +2,13 @@ import React from 'react';
 
 function HomePage() {
   return (
-    <div>
-      <h1>Welcome to the Series Hub</h1>
+  <div class="container">
+    <div class="header">
+      <h1>SAIKOU</h1>
+      <p>The next generation anime platform.</p>
+      <p>Track, discover and watch your favorite anime all in one place.</p>
     </div>
+  </div>
   );
 }
 

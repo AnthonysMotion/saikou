@@ -25,7 +25,7 @@ const scrapeAnimeList = async (pageNumber) => {
         animeList.push({ name, url: href });
       }
     });
-    //console.log(`Scraped page ${pageNumber}`);
+    console.log(`Scraped page ${pageNumber}`);
   } catch (error) {
     console.error('Error scraping anime list:', error);
   }

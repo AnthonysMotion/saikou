@@ -38,7 +38,7 @@ const AnimePage = () => {
   }
 
   return (
-    <div>
+    <div class="container">
       <h1>{animeDetails.name}</h1>
       <img src={animeDetails.image} alt={animeDetails.name} />
       <p><strong>Type:</strong> {animeDetails.type}</p>
