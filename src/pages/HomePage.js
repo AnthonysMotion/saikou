@@ -2,13 +2,23 @@ import React from 'react';
 
 function HomePage() {
   return (
-  <div class="container">
-    <div class="header">
-      <h1>SAIKOU</h1>
-      <p>The next generation anime platform.</p>
-      <p>Track, discover and watch your favorite anime all in one place.</p>
+    <div>
+      <div className="header">
+        <div className="container">
+          <h1>SAIKOU</h1>
+          <p>The next generation anime platform.<br />Track, discover and watch your favorite anime all in one place.</p>
+          <p></p>
+          <input className="search-bar" placeholder='Search'></input>
+          <button className="search-btn">Search</button>
+        </div>
+      </div>
+
+      <div className="recommended container">
+        <h2>TRENDING</h2>
+        <p>Discover trending anime in the community.</p>
+        {/* Add more content as needed */}
+      </div>
     </div>
-  </div>
   );
 }
 

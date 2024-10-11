@@ -89,6 +89,55 @@ code {
   padding-top: 60px;
 }
 
+/* header */
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-image: 
+    linear-gradient(to left, rgba(0, 0, 0, 0.1), #080A11),
+    url("https://i.imgur.com/KNi5GLA.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 500px;
+}
+
+.header .container h1, .header .container p {
+  margin: 0;
+  color: white;
+}
+
+.header .container h1 {
+  font-size: 60px;
+}
+
+.header .container p {
+  margin-bottom: 15px;
+}
+
+.search-bar {
+  background-color: transparent;
+  padding: 5px;
+  border: solid 1px white;
+  width: 80%;
+  color: white;
+}
+
+.search-btn {
+  padding: 5px;
+  background-color: white;
+  border: none;
+  color: #080A11;
+  margin-left: 10px;
+  width: 15%;
+}
+
+/* recommended */
+
+.recommended {
+  margin-top: 80px;
+}
 
 /* footer */
 
