@@ -14,7 +14,7 @@ function HomePage() {
       </div>
 
       <div className="recommended container">
-        <h2>TRENDING</h2>
+        <h1>TRENDING</h1>
         <p>Discover trending anime in the community.</p>
         {/* Add more content as needed */}
       </div>

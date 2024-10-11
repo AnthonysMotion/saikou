@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  padding: 0;
   font-family: "motiva-sans", sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -25,7 +26,7 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 10%;
+  padding: 22px 10%;
   background-color: #080A11;
   color: white;
   position: fixed;
@@ -33,6 +34,11 @@ code {
   top: 0;
   z-index: 1000;
   box-sizing: border-box;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.navbar.shrink {
+  padding: 10px 10%; /* Reduced padding when scrolling down */
 }
 
 .navbar-left {
@@ -44,6 +50,11 @@ code {
   font-size: 24px;
   font-weight: bold;
   margin-right: 60px;
+  transition: font-size 0.3s ease; /* Shrink the logo on scroll */
+}
+
+.navbar.shrink .logo {
+  font-size: 20px; /* Shrink the logo when the navbar shrinks */
 }
 
 .nav-links {
@@ -85,22 +96,22 @@ code {
 }
 
 
-.App {
-  padding-top: 60px;
-}
-
 /* header */
-
 .header {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
   background-image: 
     linear-gradient(to left, rgba(0, 0, 0, 0.1), #080A11),
-    url("https://i.imgur.com/KNi5GLA.png");
+    url("https://wallpapers-clan.com/wp-content/uploads/2024/02/one-piece-roronoa-zoro-sunset-on-the-beach-desktop-wallpaper-preview.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  height: 500px;
+  background-position: center;
+  background-attachment: fixed;
+  height: 500px; 
+  width: 100vw;
+  position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 .header .container h1, .header .container p {
@@ -133,11 +144,18 @@ code {
   width: 15%;
 }
 
-/* recommended */
-
 .recommended {
-  margin-top: 80px;
+  padding: 20px 10%;
+  background-color: #080A11;
+  color: white;
 }
+
+.recommended h2 {
+  margin-bottom: 10px;
+}
+
+
+
 
 /* footer */
 

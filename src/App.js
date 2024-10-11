@@ -3,11 +3,14 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AllAnimePage from './pages/AllAnimePage';
 import AnimePage from './pages/AnimePage';
+import useScroll from './components/useScroll';  // Import the custom hook
 
 function App() {
+  const scrollingDown = useScroll(); // Use the custom hook to track scroll
+
   return (
     <Router>
-      <nav className="navbar">
+      <nav className={`navbar ${scrollingDown ? 'shrink' : ''}`}>
         <div className="navbar-left">
           <div className="logo">
             <Link to="/">SAIKOU</Link>
