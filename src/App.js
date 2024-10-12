@@ -5,6 +5,7 @@ import AllAnimePage from './pages/AllAnimePage';
 import AnimePage from './pages/AnimePage';
 import useScroll from './components/useScroll';
 import Register from './pages/Register';
+import Login from './pages/Login';
 
 function App() {
   const scrollingDown = useScroll();
@@ -36,6 +37,7 @@ function App() {
         <Route path="/anime/list/:page" element={<AllAnimePage />} />
         <Route path="/anime/:animeName" element={<AnimePage />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} /> {/* Ensure you have this component */}
       </Routes>
     </Router>
   );
