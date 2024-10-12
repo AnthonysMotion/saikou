@@ -34,11 +34,11 @@ code {
   top: 0;
   z-index: 1000;
   box-sizing: border-box;
-  transition: all 0.3s ease; /* Smooth transition */
+  transition: all 0.3s ease;
 }
 
 .navbar.shrink {
-  padding: 10px 10%; /* Reduced padding when scrolling down */
+  padding: 10px 9%;
 }
 
 .navbar-left {
@@ -46,15 +46,20 @@ code {
   align-items: center;
 }
 
-.logo {
+.logo a {
   font-size: 24px;
   font-weight: bold;
   margin-right: 60px;
-  transition: font-size 0.3s ease; /* Shrink the logo on scroll */
+  transition: 0.3s ease;
+}
+
+.logo a:hover {
+  color: #FF729F;
+  transition: .3s ease;
 }
 
 .navbar.shrink .logo {
-  font-size: 20px; /* Shrink the logo when the navbar shrinks */
+  font-size: 20px;
 }
 
 .nav-links {
@@ -76,7 +81,9 @@ code {
 }
 
 .nav-links a:hover {
+  color: #FF729F;
   transition: .3s ease;
+  height: 100%;
 }
 
 .navbar-right {
@@ -88,6 +95,15 @@ code {
   padding: 10px 15px;
   background-color: #2C3144;
   transition: .3s ease;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.navbar-right a:hover {
+  color: white;
+  background-color: #FF729F;
+  transition: .3s ease;
+  height: 100%;
 }
 
 .navbar a {
@@ -102,8 +118,8 @@ code {
   align-items: center;
   background-image: 
     linear-gradient(to left, rgba(0, 0, 0, 0.1), #080A11),
-    url("https://wallpapers-clan.com/wp-content/uploads/2024/02/one-piece-roronoa-zoro-sunset-on-the-beach-desktop-wallpaper-preview.jpg");
-  background-repeat: no-repeat;
+    url("https://i.redd.it/lsjleew1p1hb1.jpg");
+  background-repeat: repeat;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -112,6 +128,7 @@ code {
   position: relative;
   margin: 0;
   padding: 0;
+  transition: opacity 1s ease-in-out;
 }
 
 .header .container h1, .header .container p {

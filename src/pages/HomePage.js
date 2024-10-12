@@ -3,7 +3,7 @@ import React from 'react';
 function HomePage() {
   return (
     <div>
-      <div className="header">
+      <div className="header" id="header">
         <div className="container">
           <h1>SAIKOU</h1>
           <p>The next generation anime platform.<br />Track, discover and watch your favorite anime all in one place.</p>

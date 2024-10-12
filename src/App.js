@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AllAnimePage from './pages/AllAnimePage';
 import AnimePage from './pages/AnimePage';
-import useScroll from './components/useScroll';  // Import the custom hook
+import useScroll from './components/useScroll';
 
 function App() {
-  const scrollingDown = useScroll(); // Use the custom hook to track scroll
+  const scrollingDown = useScroll();
 
   return (
     <Router>
