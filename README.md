@@ -4,6 +4,12 @@ This application serves as a dynamic platform for anime enthusiasts to explore, 
 
 ![App screenshot](https://i.imgur.com/cDDTxPQ.png)
 
+App home page
+
+![App screenshot2](https://i.imgur.com/HSM99u7.png)
+
+Anime cards
+
 ## Features
 
 - **Dynamic Anime List**: Fetch and display a paginated list of anime.
