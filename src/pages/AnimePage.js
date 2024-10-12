@@ -10,8 +10,10 @@ const AnimePage = () => {
   useEffect(() => {
     const fetchAnimeDetails = async () => {
       try {
+        // Fetch anime details from the backend API
         const response = await axios.get(`http://localhost:5000/api/anime/${animeName}`);
         
+        // Check if data is received and set the state accordingly
         if (response.data) {
           setAnimeDetails(response.data);
           setError(null);  // Clear error if data is found
@@ -24,32 +26,39 @@ const AnimePage = () => {
       }
     };
 
+    // Fetch details if animeName is available
     if (animeName) {
       fetchAnimeDetails();
     }
   }, [animeName]);
 
+  // Handle error state
   if (error) {
     return <div>{error}</div>;
   }
 
+  // Handle loading state
   if (!animeDetails) {
     return <div>Loading...</div>;
   }
 
+  // Render anime details
   return (
-    <div class="container">
+    <div className="anime-details container">
       <h1>{animeDetails.name}</h1>
-      <img src={animeDetails.image} alt={animeDetails.name} />
-      <p><strong>Type:</strong> {animeDetails.type}</p>
-      <p><strong>Plot Summary:</strong> {animeDetails.plotSummary}</p>
-      <p><strong>Genre:</strong> {animeDetails.genres}</p>
-      <p><strong>Released:</strong> {animeDetails.released}</p>
-      <p><strong>Status:</strong> {animeDetails.status}</p>
-      <p><strong>Total Episodes:</strong> {animeDetails.episodes}</p>
+      <div className="anime-content">
+        <img src={animeDetails.image} alt={animeDetails.name} className="anime-image" />
+        <div className="anime-info">
+          <p><strong>Type:</strong> {animeDetails.type}</p>
+          <p><strong>Plot Summary:</strong> {animeDetails.plotSummary}</p>
+          <p><strong>Genre:</strong> {animeDetails.genres.join(', ')}</p> {/* Join genres for better display */}
+          <p><strong>Released:</strong> {animeDetails.released}</p>
+          <p><strong>Status:</strong> {animeDetails.status}</p>
+          <p><strong>Total Episodes:</strong> {animeDetails.episodes}</p>
+        </div>
+      </div>
     </div>
   );
 };
-
 
 export default AnimePage;

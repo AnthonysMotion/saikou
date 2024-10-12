@@ -9,7 +9,7 @@ function HomePage() {
   useEffect(() => {
     const fetchAnimeData = async () => {
       try {
-        const animeUrls = ['naruto', 'one-piece', 'bocchi-the-rock', 'k-on', 'dragon-ball-z', 'wangan-midnight'];
+        const animeUrls = ['naruto', 'one-piece', 'bocchi-the-rock', 'k-on', 'dragon-ball-z', 'hunter-x-hunter-2011'];
     
         const promises = animeUrls.map((url) => axios.get(`http://localhost:5000/api/anime/${url}`));
         
@@ -57,13 +57,14 @@ function HomePage() {
         <div className="card-grid">
           {animeData.map((anime, index) => (
             <Card
-              key={index}
-              image={anime.image}
-              name={anime.name}
-              releaseDate={anime.released}
-              episodes={anime.episodes}
-              plotSummary={anime.plotSummary}
-            />
+            key={anime.url}
+            image={anime.image}
+            name={anime.name}
+            releaseDate={anime.released}
+            episodes={anime.episodes}
+            plotSummary={anime.plotSummary}
+            url={anime.url}
+          />
           ))}
         </div>
       </div>

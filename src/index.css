@@ -2,6 +2,10 @@
   background-color: #FF729F;
 }
 
+* {
+  text-decoration: none;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -241,4 +245,25 @@ code {
 /* card */
 .card-grid {
   margin-top: 60px;
+}
+
+/* anime page */
+
+
+.anime-content {
+  display: flex;
+  margin-top: 20px;
+}
+
+.anime-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  margin-right: 20px;
+}
+
+.anime-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }

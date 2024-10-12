@@ -31,58 +31,78 @@ const scrapeAnimeList = async (pageNumber) => {
   }
 };
 
-// Function to scrape anime details of a specific anime
 const scrapeAnimeDetails = async (animeUrl) => {
-    // Construct the correct URL with '/category/' path
-    const animeDetailsUrl = `https://ww8.gogoanimes.org/category/${animeUrl}`;
-    
-    try {
-      const { data } = await axios.get(animeDetailsUrl);
-      const $ = cheerio.load(data);
-  
-      // Scrape the details of the anime from the page
-      const name = $('h1').text().trim();  // Extract the anime name
-      const image = $('div.anime_info_body img').attr('src');  // Grab the image source URL
-      const type = $('p.type span:contains("Type:")').next().text().trim();  // Get Type
-  
-      // Scrape the Plot Summary
-      const plotSummary = $('p.type span:contains("Plot Summary:")').next().next().text().trim();
-  
-      // Scrape the genres, which are multiple <a> tags inside the 'Genre:' section
-      const genres = [];
-      $('p.type span:contains("Genre:")').next().find('a').each((i, el) => {
-        genres.push($(el).text().trim());
-      });
-  
-      // Scrape the Released date
-      const released = $('p.type span:contains("Released:")').next().text().trim();
-  
-      // Scrape the Status
-      const status = $('p.type span:contains("Status:")').next().text().trim();
-  
-      // Scrape the total number of episodes (assuming episodes are in <a> tags with href starting with "/episode")
-      const episodes = $('div.anime_info_episodes_next').find('a[href^="/episode"]').length;
-  
-      // Return the scraped anime details
-      return {
-        name,
-        image,
-        type,
-        plotSummary,
-        genres,
-        released,
-        status,
-        episodes
-      };
-    } catch (error) {
-      console.error('Error scraping anime details:', error);
-      return null;
-    }
-  };
+  // Construct the correct URL with '/category/' path
+  const animeDetailsUrl = `https://ww8.gogoanimes.org/category/${animeUrl}`;
+
+  try {
+    const { data } = await axios.get(animeDetailsUrl);
+    const $ = cheerio.load(data);
+
+    // Scrape the details of the anime from the page
+    const name = $('h1').first().text().trim(); // Extract the anime name from <h1>
+    const image = $('div.anime_info_body_bg img').attr('src'); // Grab the image source URL
+    const type = $('p.type span:contains("Type:")').next('a').text().trim(); // Get Type
+
+    // Scrape the Plot Summary
+    const plotSummary = $('p.type:contains("Plot Summary:")')
+      .first() // Get the first <p> element containing "Plot Summary:"
+      .html() // Get the HTML content
+      .replace(/<span>Plot Summary:<\/span>\s*/, '') // Remove the "Plot Summary:" label and any whitespace
+      .replace(/<\/?[^>]+(>|$)/g, '') // Remove remaining HTML tags
+      .replace('Plot Summary: ', '')
+      .trim(); // Trim any leading or trailing whitespace
+
+    // Scrape the genres, which are multiple <a> tags inside the 'Genre:' section
+    const genres = [];
+    $('p.type:contains("Genre:")').find('a').each((i, el) => {
+      genres.push($(el).text().trim());
+    });
+
+    // Scrape the Released date
+    const released = $('p.type:contains("Released:")')
+    .first() // Get the first <p> element containing "Released:"
+    .html() // Get the HTML content
+    .replace(/<span>Released:<\/span>\s*/, '') // Remove the "Released:" label and any whitespace
+    .replace(/<\/?[^>]+(>|$)/g, '') // Remove remaining HTML tags
+    .replace('Released: ', '')
+    .trim(); // Trim any leading or trailing whitespace
+
+    // Scrape the Status
+    const status = $('p.type:contains("Status:")')
+    .first() // Get the first <p> element containing "Status:"
+    .html() // Get the HTML content
+    .replace(/<span>Status:<\/span>\s*/, '') // Remove the "Status:" label
+    .replace(/<\/?[^>]+(>|$)/g, '') // Remove remaining HTML tags
+    .replace('Status: ', '')
+    .trim(); // Trim any whitespace
+
+    // Scrape the total number of episodes
+    const episodes = $('ul#episode_page li a.active').text().trim();
+    const episodeCount = episodes.split('-').pop().trim(); // Get the ending number from the range
+    const totalEpisodes = parseInt(episodeCount, 10); // Convert to an integer
+
+    // Return the scraped anime details
+    return {
+      name,
+      image,
+      type,
+      plotSummary,
+      genres,
+      released,
+      status,
+      episodes: totalEpisodes || 0, // Total episodes
+    };
+  } catch (error) {
+    console.error('Error scraping anime details:', error);
+    return null;
+  }
+};
+
 
 // Scrape all anime list pages (up to 247 pages)
 const scrapeAllPages = async () => {
-  const totalPages = 247;  // Adjust this if necessary
+  const totalPages = 100;  // Adjust this if necessary
 
   for (let page = 1; page <= totalPages; page++) {
     await scrapeAnimeList(page);
