@@ -36,10 +36,10 @@ const AnimePage = () => {
   const handleEpisodeClick = async (episodeNumber) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/anime/episode/${animeName}/${episodeNumber}`);
-      console.log(response.data); // Log response data for debugging
+      console.log(response.data);
       if (response.data && response.data.iframe) {
-        setEpisodeIframe(response.data.iframe); // Update the iframe source with the video URL
-        setCurrentEpisode(episodeNumber); // Update current episode
+        setEpisodeIframe(response.data.iframe);
+        setCurrentEpisode(episodeNumber);
       } else {
         setError('Error fetching episode details.');
       }
@@ -65,14 +65,14 @@ const AnimePage = () => {
       <div className="iframe-container">
         <iframe
           src={episodeIframe}
-          title={`Episode ${currentEpisode}`} // Add a unique title for accessibility
+          title={`Episode ${currentEpisode}`}
           allowFullScreen
           frameBorder="0"
           marginWidth="0"
           marginHeight="0"
           scrolling="no"
           width="100%"
-          height="1080" // Set height as needed
+          height="1080"
         ></iframe>
       </div>
 
