@@ -82,10 +82,12 @@ function HomePage() {
           ))}
         </div>
       </div>
-      <div className="popular container">
+      {/*
+            <div className="popular container">
         <h1>POPULAR</h1>
         <p>Discover the most popular anime in the community</p>
       </div>
+      */}
     </div>
   );
 }

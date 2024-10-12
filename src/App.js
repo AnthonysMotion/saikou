@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import AllAnimePage from './pages/AllAnimePage';
 import AnimePage from './pages/AnimePage';
 import useScroll from './components/useScroll';
+import Register from './pages/Register';
 
 function App() {
   const scrollingDown = useScroll();
@@ -24,7 +25,7 @@ function App() {
         <div className="navbar-right">
           <ul className="nav-links">
             <li><Link to="/login">LOG IN</Link></li>
-            <li><Link to="/signup">REGISTER</Link></li>
+            <li><Link to="/register">REGISTER</Link></li>
           </ul>
         </div>
       </nav>
@@ -34,6 +35,7 @@ function App() {
         <Route path="/all-anime" element={<AllAnimePage />} />
         <Route path="/anime/list/:page" element={<AllAnimePage />} />
         <Route path="/anime/:animeName" element={<AnimePage />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
