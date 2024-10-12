@@ -8,7 +8,7 @@ This application serves as a dynamic platform for anime enthusiasts to explore, 
 
 - **Dynamic Anime List**: Fetch and display a paginated list of anime.
 - **Anime Details**: View detailed information about each anime, including descriptions, episode lists, and more.
-- **Watch Episodes**: Stream episodes directly from the app without embedding entire web pages.
+- **Watch Episodes**: Scrapes from external website to provide episodes for each anime.
 - **User Authentication**: Secure user registration and login functionality.
 - **Responsive Design**: Fully responsive UI for optimal viewing on any device.
 
