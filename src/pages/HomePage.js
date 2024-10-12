@@ -8,8 +8,10 @@ function HomePage() {
           <h1>SAIKOU</h1>
           <p>The next generation anime platform.<br />Track, discover and watch your favorite anime all in one place.</p>
           <p></p>
-          <input className="search-bar" placeholder='Search'></input>
-          <button className="search-btn">Search</button>
+          <div class="input-ctn">
+            <input className="search-bar" placeholder='Search'></input>
+            <button className="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
         </div>
       </div>
 
