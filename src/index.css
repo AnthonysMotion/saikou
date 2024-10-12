@@ -202,6 +202,11 @@ code {
   padding-right: 10%;
 }
 
+
+
+
+
+
 .overlay-image {
   position: absolute;
   left: 60%;
@@ -227,8 +232,8 @@ code {
 /* footer */
 
 .footer {
-  position: relative;
-  top: 1000px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 /* components */
