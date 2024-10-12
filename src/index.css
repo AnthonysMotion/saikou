@@ -1,3 +1,7 @@
+*::selection {
+  background-color: #FF729F;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -193,16 +197,30 @@ code {
   transform: scale(0.95);
 }
 
+.header img {
+  margin-left: auto;
+  padding-right: 10%;
+}
+
+.overlay-image {
+  position: absolute;
+  left: 60%;
+  top: 45%;
+  width: 15%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+
 .recommended {
   padding: 20px 10%;
   background-color: #080A11;
   color: white;
 }
 
-.recommended h2 {
+.recommended h1 {
   margin-bottom: 10px;
 }
-
 
 
 
@@ -211,4 +229,11 @@ code {
 .footer {
   position: relative;
   top: 1000px;
+}
+
+/* components */
+
+/* card */
+.card-grid {
+  margin-top: 60px;
 }

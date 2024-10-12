@@ -44,6 +44,17 @@ app.get('/api/anime/:animeName', async (req, res) => {
   }
 });
 
+app.get('/api/anime/:animeUrl', async (req, res) => {
+  const { animeUrl } = req.params;
+  const animeDetails = await scrapeAnimeDetails(animeUrl);
+
+  if (animeDetails) {
+      res.json(animeDetails);
+  } else {
+      res.status(404).json({ message: 'Anime not found' });
+  }
+});
+
 // Start the server and scrape all anime list pages
 scrapeAllPages().then(() => {
   app.listen(PORT, () => {

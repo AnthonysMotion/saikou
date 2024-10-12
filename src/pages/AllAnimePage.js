@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Card from '../components/card'; // Make sure this path is correct
 
 const AllAnimePage = () => {
-  const { page } = useParams(); // Get the page from URL params
+  const { page } = useParams();
   const [animeList, setAnimeList] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);  // New state to store the total item count
-  const itemsPerPage = 100;  // Set the items per page (same as backend)
+  const [totalItems, setTotalItems] = useState(0);
+  const itemsPerPage = 100;
 
-  // Fetch anime list based on current page
   useEffect(() => {
     fetch(`http://localhost:5000/api/anime-list?page=${page}`)
       .then((res) => res.json())
       .then((data) => {
-        setAnimeList(data.paginatedAnimeList);  // Set the anime list
-        setTotalItems(data.totalItems);  // Set total number of items
+        console.log(data); // Log the response to check the structure
+        setAnimeList(data.paginatedAnimeList);
+        setTotalItems(data.totalItems);
       })
       .catch((err) => console.log('Error fetching anime:', err));
   }, [page]);
 
-  // Calculate total pages based on total items
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
   return (
-    <div class="container">
+    <div className="container">
       <h1>Anime List - Page {page}</h1>
-      <div>
+      <div className="card-grid">
         {animeList.map((anime) => (
-          <div key={anime.url}>
-            <h2>{anime.name}</h2>
-            <a href={`/anime/${anime.url}`}>Watch {anime.name}</a>
-          </div>
+          <Card
+            key={anime.url}
+            image={anime.image} // Ensure this property exists in your API response
+            name={anime.name}
+            releaseDate={anime.released}
+            episodes={anime.episodes}
+            plotSummary={anime.plotSummary}
+          />
         ))}
       </div>
 
@@ -38,7 +41,6 @@ const AllAnimePage = () => {
         {Number(page) > 1 && (
           <Link to={`/anime/list/${Number(page) - 1}`}>Previous</Link>
         )}
-
         {Number(page) < totalPages && (
           <Link to={`/anime/list/${Number(page) + 1}`}>Next</Link>
         )}
@@ -46,5 +48,4 @@ const AllAnimePage = () => {
     </div>
   );
 };
-
 export default AllAnimePage;
