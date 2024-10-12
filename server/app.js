@@ -1,57 +1,69 @@
 const express = require('express');
-const axios = require('axios');
-const cheerio = require('cheerio');
+const bcrypt = require('bcrypt');
+const router = express.Router();
+const { db } = require('./server'); // Import the db instance
 
-const app = express();
-const PORT = 5000;
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
 
-app.get('/api/anime', async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-  
     try {
-      const { data } = await axios.get('https://externalwebsite.com/anime');
-      const $ = cheerio.load(data);
-      const anime = [];
-  
-      $('ul.anime-list li').each((i, element) => {
-        const title = $(element).find('a').text();
-        const id = $(element).find('a').attr('href').split('/').pop();
-        anime.push({ id, title });
-      });
-  
-      const paginatedanime = anime.slice((page - 1) * limit, page * limit);
-      res.json(paginatedanime);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error scraping the anime list' });
+        // Fetch user from the database
+        db.get(`SELECT * FROM users WHERE username = ? OR email = ?`, [username, username], async (err, row) => {
+            if (err) {
+                console.error('Error fetching user:', err.message);
+                return res.status(500).json({ success: false, message: 'Internal server error' });
+            }
+            if (!row) {
+                return res.status(401).json({ success: false, message: 'Invalid username or password' });
+            }
+
+            // Compare the password with the hash stored in the database
+            const match = await bcrypt.compare(password, row.password);
+            if (!match) {
+                return res.status(401).json({ success: false, message: 'Invalid username or password' });
+            }
+
+            // Successful login
+            res.json({ success: true, user: { username: row.username } });
+        });
+    } catch (err) {
+        console.error('Error logging in:', err.message);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
     }
-  });  
+});
 
-app.get('/api/anime/:id', async (req, res) => {
-  const { id } = req.params;
-  
-  try {
-    const { data } = await axios.get(`https://ww8.gogoanimes.org/category/${id}`);
-    const $ = cheerio.load(data);
-    
-    const title = $('h1.anime-title').text();
-    const description = $('p.anime-description').text();
-    const episodes = [];
+router.post('/register', async (req, res) => {
+    const { username, password, email } = req.body;
 
-    $('ul.episode-list li').each((i, element) => {
-      const episodeTitle = $(element).find('a').text();
-      const videoUrl = $(element).find('a').attr('href');
-      episodes.push({ title: episodeTitle, videoUrl });
+    // Check if username or email already exists
+    db.get(`SELECT * FROM users WHERE username = ? OR email = ?`, [username, email], async (err, row) => {
+        if (err) {
+            console.error('Error checking existing users:', err.message);
+            return res.status(500).json({ message: 'Error checking existing users' });
+        }
+
+        if (row) {
+            return res.status(409).json({ message: 'Username or email already exists' });
+        }
+
+        // Hash the password
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            // Insert new user into the users table
+            const query = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
+            db.run(query, [username, hashedPassword, email], function (err) {
+                if (err) {
+                    console.error('Error registering user:', err.message);
+                    return res.status(500).json({ message: 'Error registering user' });
+                }
+                console.log(`User registered with ID: ${this.lastID}`);
+                res.status(201).json({ id: this.lastID, username, email });
+            });
+        } catch (error) {
+            console.error('Error hashing password:', error.message);
+            return res.status(500).json({ message: 'Error registering user' });
+        }
     });
-
-    res.json({ title, description, episodes });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error scraping the anime details' });
-  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = router; // Export the router
