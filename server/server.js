@@ -1,8 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const { scrapeAllPages, scrapeAnimeDetails, animeList } = require('./scrape');  // Import scrape functions
+const { scrapeAllPages, scrapeAnimeDetails, scrapeEpisodeIframe, animeList } = require('./scrape');  // Import scrape functions
 const app = express();
 const PORT = 5000;
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 // Enable CORS for all origins
 app.use(cors());
@@ -44,16 +46,41 @@ app.get('/api/anime/:animeName', async (req, res) => {
   }
 });
 
-app.get('/api/anime/:animeUrl', async (req, res) => {
-  const { animeUrl } = req.params;
-  const animeDetails = await scrapeAnimeDetails(animeUrl);
+app.get('/api/anime/episode/:animeName/:episodeNumber', async (req, res) => {
+  const { animeName, episodeNumber } = req.params;
+  // Update the URL to the new site
+  const url = `https://ww1.9anime2.com/watch/${animeName}/${episodeNumber}`;
 
-  if (animeDetails) {
-      res.json(animeDetails);
-  } else {
-      res.status(404).json({ message: 'Anime not found' });
+  console.log(`Scraping URL: ${url}`); // Log the URL being scraped
+
+  try {
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
+
+    // Find the iframe source URL using the new ID selector
+    var iframeSrc = $('#playerframe').attr('src'); // Change the selector to match the new site's iframe
+
+    console.log(`Found iframe: ${iframeSrc}`); // Log the found iframe URL
+    if (iframeSrc.startsWith('/embed/')) {
+      iframeSrc = `https://ww1.9anime2.com${iframeSrc}`;
+    }
+    console.log(`Updated iframe: ${iframeSrc}`);
+
+    if (iframeSrc) {
+      res.json({ iframe: iframeSrc });
+    } else {
+      console.log('Iframe not found in HTML');
+      res.status(404).json({ error: 'Iframe not found' });
+    }
+  } catch (error) {
+    console.error('Error scraping the page:', error);
+    res.status(500).json({ error: 'Failed to fetch episode details' });
   }
 });
+
+
+
 
 // Start the server and scrape all anime list pages
 scrapeAllPages().then(() => {

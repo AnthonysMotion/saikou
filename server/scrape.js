@@ -61,21 +61,21 @@ const scrapeAnimeDetails = async (animeUrl) => {
 
     // Scrape the Released date
     const released = $('p.type:contains("Released:")')
-    .first() // Get the first <p> element containing "Released:"
-    .html() // Get the HTML content
-    .replace(/<span>Released:<\/span>\s*/, '') // Remove the "Released:" label and any whitespace
-    .replace(/<\/?[^>]+(>|$)/g, '') // Remove remaining HTML tags
-    .replace('Released: ', '')
-    .trim(); // Trim any leading or trailing whitespace
+      .first() // Get the first <p> element containing "Released:"
+      .html() // Get the HTML content
+      .replace(/<span>Released:<\/span>\s*/, '') // Remove the "Released:" label and any whitespace
+      .replace(/<\/?[^>]+(>|$)/g, '') // Remove remaining HTML tags
+      .replace('Released: ', '')
+      .trim(); // Trim any leading or trailing whitespace
 
     // Scrape the Status
     const status = $('p.type:contains("Status:")')
-    .first() // Get the first <p> element containing "Status:"
-    .html() // Get the HTML content
-    .replace(/<span>Status:<\/span>\s*/, '') // Remove the "Status:" label
-    .replace(/<\/?[^>]+(>|$)/g, '') // Remove remaining HTML tags
-    .replace('Status: ', '')
-    .trim(); // Trim any whitespace
+      .first() // Get the first <p> element containing "Status:"
+      .html() // Get the HTML content
+      .replace(/<span>Status:<\/span>\s*/, '') // Remove the "Status:" label
+      .replace(/<\/?[^>]+(>|$)/g, '') // Remove remaining HTML tags
+      .replace('Status: ', '')
+      .trim(); // Trim any whitespace
 
     // Scrape the total number of episodes
     const episodes = $('ul#episode_page li a.active').text().trim();
@@ -99,6 +99,26 @@ const scrapeAnimeDetails = async (animeUrl) => {
   }
 };
 
+// New function to scrape the iframe for a specific episode
+const scrapeEpisodeIframe = async (animeUrl, episodeNumber) => {
+  // Construct the episode URL for 9anime
+  const episodeUrl = `https://ww1.9anime2.com/watch/${animeUrl}/${episodeNumber}`;
+
+  try {
+    const { data } = await axios.get(episodeUrl);
+    const $ = cheerio.load(data);
+
+    // Extract the iframe src from the HTML structure
+    const iframeSrc = $('#playerframe').attr('src'); // Get the src of the iframe with id 'playerframe'
+
+    return iframeSrc || null; // Return the iframe URL or null if not found
+  } catch (error) {
+    console.error('Error scraping episode iframe:', error);
+    return null; // Return null if there's an error
+  }
+};
+
+
 
 // Scrape all anime list pages (up to 247 pages)
 const scrapeAllPages = async () => {
@@ -112,4 +132,4 @@ const scrapeAllPages = async () => {
   return animeList;
 };
 
-module.exports = { scrapeAnimeList, scrapeAnimeDetails, scrapeAllPages, animeList };
+module.exports = { scrapeAnimeList, scrapeAnimeDetails, scrapeAllPages, scrapeEpisodeIframe, animeList };

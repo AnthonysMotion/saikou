@@ -47,7 +47,7 @@ const AllAnimePage = () => {
         )}
       </div>
       {loading ? (
-        <div>Loading...</div>
+        <div>Loading...</div> // Or use a skeleton loader here
       ) : (
         <div className="card-grid">
           {animeList.map((anime) => (
@@ -58,6 +58,7 @@ const AllAnimePage = () => {
               releaseDate={anime.released}
               episodes={anime.episodes}
               plotSummary={anime.plotSummary}
+              url={anime.url}
             />
           ))}
         </div>
